@@ -1,7 +1,10 @@
 from components.create_character import generate_character
-from components.contract_interaction import mint_character,query_character
+from components.contract_interaction import mint_character,query_character,burn_character
 from components.create_story import start_conversation
 from components.ipfs_connection import upload_ipfs
+
+
+
 
 def character_select_info(character:dict):
     print("Load character...")
@@ -20,6 +23,7 @@ def main():
         print("0. Exit")
         
         choice = input("Select an option: ").strip()
+        
         json_datas,token_URIs,token_IDs = query_character()
         if choice == "1":
             # Start a new game: generate a character, upload metadata, mint NFT, then start conversation.
@@ -63,23 +67,28 @@ def main():
         elif choice == "3":
             # Query character: ask for token ID and display character info.
             try:
-                json_datas,token_URIs,token_IDs = query_character()
-                for json_data in json_datas:
-                    print("===================================")
-                    print(f"Name        : {json_data.get('name', 'N/A')}")
-                    print(f"Description : {json_data.get('description', 'N/A')}")
-                    print(f"Image URL   : {json_data.get('image', 'N/A')}")
-                    print("\nAttributes:")
-                    for attr in json_data.get("attributes", []):
-                        print(f"  {attr.get('trait_type', 'N/A')}: {attr.get('value', 'N/A')}")
+                if len(json_datas) == 0:
+                    print("No characters found. Please create a character first.")
+                else:
+                    for json_data in json_datas:
+                        print("===================================")
+                        print(f"Name        : {json_data.get('name', 'N/A')}")
+                        print(f"Description : {json_data.get('description', 'N/A')}")
+                        print(f"Image URL   : {json_data.get('image', 'N/A')}")
+                        print("\nAttributes:")
+                        for attr in json_data.get("attributes", []):
+                            print(f"  {attr.get('trait_type', 'N/A')}: {attr.get('value', 'N/A')}")
             except Exception as e:
                 print("Error querying character:", e)
                 
         elif choice == "4":
             # Burn character: ask for token ID and burn the character NFT.
             try:
-                token_id = int(input("Enter token ID to burn: ").strip())
-                burn_character(token_id)
+                for index, data in enumerate(json_datas):
+                        print(f"{index + 1}: {data.get('name', 'Unknown')} - Experience: {data.get("attributes")[1].get("value")} - Level: {data.get("attributes")[0].get("value")}")
+                burn_index = int(input("Enter number to burn character: ").strip())
+                
+                burn_character(token_IDs[burn_index])
                 print("Character burned successsfully.")
             except Exception as e:
                 print("Error burning character:", e)

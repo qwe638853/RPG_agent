@@ -32,6 +32,7 @@ character_status: public(HashMap[uint256, CharacterStatus])
 
 # NFT 計數器
 counter: public(uint256)
+agent_admin: address
 
 @deploy
 def __init__(base_uri: String[80]):
@@ -41,6 +42,7 @@ def __init__(base_uri: String[80]):
     ownable.__init__()
     erc721.__init__("D&D Characters", "DND", base_uri, "D&D EIP712", "1.0")
     self.counter = 0
+    self.agent_admin = msg.sender
 
 @external
 def create_character(
@@ -80,7 +82,7 @@ def update_status(
     更新指定 NFT 的角色狀態（例如升級後更新等級、經驗值與血量）。
     只有 NFT 擁有者才能更新其狀態。
     """
-    assert erc721._owner_of(token_id) == msg.sender, "Only owner can update status"
+    assert msg.sender == self.agent_admin, "Only admin can update status"
     status: CharacterStatus = self.character_status[token_id]
     status.level = new_level
     status.experience = new_experience
@@ -105,7 +107,7 @@ def gain_experience(token_id: uint256, xp_gained: uint256):
     角色獲得 XP：疊加後若足夠升級，則自動升級。
     只有 NFT 擁有者能呼叫。
     """
-    assert erc721._owner_of(token_id) == msg.sender, "Only owner can modify XP"
+    assert msg.sender == self.agent_admin, "Only admin can modify XP"
     
     status: CharacterStatus = self.character_status[token_id]
     status.experience += xp_gained
@@ -131,6 +133,6 @@ def kill_character(token_id: uint256):
     """
     銷毀 NFT，並刪除該 NFT 對應的角色狀態。
     """
-    assert erc721._owner_of(token_id) == msg.sender, "Only the owner can burn"
+    assert msg.sender == self.agent_admin, "Only the owner can burn"
     erc721._burn(token_id)
     self.character_status[token_id] = empty(CharacterStatus)

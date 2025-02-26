@@ -5,10 +5,13 @@ from moccasin.config import get_active_network
 # Set the `base_uri` (the base URI for NFT Metadata, can use IPFS or a server)
 BASE_URI = "https://ipfs.io/ipfs/"
 
+
+
 def deploy_character() -> VyperContract:
     """
     Deploy the Character ERC-721 smart contract
     """
+
     character_contract = Character.deploy(BASE_URI)
     return character_contract
 

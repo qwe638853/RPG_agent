@@ -1,6 +1,6 @@
 # Moccasin Project
 
-🐍 Welcome to your Moccasin project!
+RPG_agent is an interactive NFT-based role-playing game inspired by Dungeons & Dragons. 
 
 ## Quickstart
 

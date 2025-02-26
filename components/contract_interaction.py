@@ -3,213 +3,147 @@ from pathlib import Path
 from dotenv import load_dotenv
 from moccasin.config import get_config
 from moccasin.named_contract import NamedContract
+from moccasin.moccasin_account import MoccasinAccount
 from .ipfs_connection import get_ipfs_json
+
 
 # Load environment variables (adjust according to actual path)
 root_dir = Path(__file__).parent
 load_dotenv(root_dir / ".env")
 
 ABI = [
-  {
-    "type": "constructor",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "base_uri",
-        "type": "string"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "create_character",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "name": "metadata_uri",
-        "type": "string"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "update_status",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      },
-      {
-        "name": "new_level",
-        "type": "uint256"
-      },
-      {
-        "name": "new_experience",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "gain_experience",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      },
-      {
-        "name": "xp_gained",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "query_character",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "tuple",
-        "components": [
-          {
-            "name": "level",
-            "type": "uint256"
-          },
-          {
-            "name": "experience",
-            "type": "uint256"
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "kill_character",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "ownerOf",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "tokenURI",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "totalSupply",
-    "stateMutability": "view",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "burn",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "token_id",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "type": "function",
-    "name": "tokenOfOwnerByIndex",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "address"
-      },
-      {
-        "name": "index",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "function",
-    "name": "balanceOf",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "owner",
-        "type": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ]
-  }
-  
-  
+    {
+        "inputs": [
+            { "internalType": "string", "name": "base_uri", "type": "string" }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            { "internalType": "address", "name": "owner", "type": "address" },
+            { "internalType": "string", "name": "metadata_uri", "type": "string" }
+        ],
+        "name": "create_character",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
+        ],
+        "name": "query_character",
+        "outputs": [
+            {
+                "components": [
+                    { "internalType": "uint256", "name": "level", "type": "uint256" },
+                    { "internalType": "uint256", "name": "experience", "type": "uint256" }
+                ],
+                "internalType": "struct CharacterStatus",
+                "name": "status",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" },
+            { "internalType": "uint256", "name": "new_level", "type": "uint256" },
+            { "internalType": "uint256", "name": "new_experience", "type": "uint256" }
+        ],
+        "name": "update_status",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" },
+            { "internalType": "uint256", "name": "xp_gained", "type": "uint256" }
+        ],
+        "name": "gain_experience",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
+        ],
+        "name": "kill_character",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "level", "type": "uint256" }
+        ],
+        "name": "_xp_required_for_level",
+        "outputs": [
+            { "internalType": "uint256", "name": "xp_needed", "type": "uint256" }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
+        ],
+        "name": "ownerOf",
+        "outputs": [
+            { "internalType": "address", "name": "owner", "type": "address" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "totalSupply",
+        "outputs": [
+            { "internalType": "uint256", "name": "supply", "type": "uint256" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
+        ],
+        "name": "tokenURI",
+        "outputs": [
+            { "internalType": "string", "name": "uri", "type": "string" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
+        ],
+        "name": "burn",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            { "internalType": "address", "name": "owner", "type": "address" }
+        ],
+        "name": "balanceOf",
+        "outputs": [
+            { "internalType": "uint256", "name": "balance", "type": "uint256" }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
 ]
+
+
+
 
 
 
@@ -218,7 +152,9 @@ def get_contract():
     Obtain the deployed smart contract via Moccasin
     """
     network = get_config().get_active_network()
+    
     default_wallet = network.get_default_account()
+
     contract: NamedContract = network.manifest_named_contract(
         contract_name="Character",
         abi=ABI,
@@ -251,7 +187,7 @@ def query_character():
         print(f"Query character failed: {e}")
             
             
-def gain_xp(token_id:int ,gained_xp:int ):
+def gain_xp(token_id:int ,gained_xp:int):
     contract, default_wallet = get_contract()
     try:
         print(f"Attempting to add {gained_xp} XP to token {token_id}...")
@@ -259,7 +195,14 @@ def gain_xp(token_id:int ,gained_xp:int ):
         print(f"Token {token_id} has successfully gained {gained_xp} XP.")
     except Exception as e:
         print(f"Failed to update XP for token {token_id}: {e}")
-        
+
+def burn_character(token_id:int):
+    contract, default_wallet = get_contract()
+    try:
+      contract.kill_character(token_id)
+    except Exception as e:
+        print(f"Failed to burn character for token : {e}")
+
         
         
 def mint_character(character: dict,tokenURI: str):
