@@ -12,135 +12,206 @@ root_dir = Path(__file__).parent
 load_dotenv(root_dir / ".env")
 
 ABI = [
-    {
-        "inputs": [
-            { "internalType": "string", "name": "base_uri", "type": "string" }
+  {
+    "inputs": [
+      {
+        "name": "base_uri",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "name": "metadata_uri",
+        "type": "string"
+      }
+    ],
+    "name": "create_character",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      },
+      {
+        "name": "new_level",
+        "type": "uint256"
+      },
+      {
+        "name": "new_experience",
+        "type": "uint256"
+      }
+    ],
+    "name": "update_status",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      },
+      {
+        "name": "xp_gained",
+        "type": "uint256"
+      }
+    ],
+    "name": "gain_experience",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "query_character",
+    "outputs": [
+      {
+        "components": [
+          {
+            "name": "level",
+            "type": "uint256"
+          },
+          {
+            "name": "experience",
+            "type": "uint256"
+          }
         ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [
-            { "internalType": "address", "name": "owner", "type": "address" },
-            { "internalType": "string", "name": "metadata_uri", "type": "string" }
-        ],
-        "name": "create_character",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
-        ],
-        "name": "query_character",
-        "outputs": [
-            {
-                "components": [
-                    { "internalType": "uint256", "name": "level", "type": "uint256" },
-                    { "internalType": "uint256", "name": "experience", "type": "uint256" }
-                ],
-                "internalType": "struct CharacterStatus",
-                "name": "status",
-                "type": "tuple"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" },
-            { "internalType": "uint256", "name": "new_level", "type": "uint256" },
-            { "internalType": "uint256", "name": "new_experience", "type": "uint256" }
-        ],
-        "name": "update_status",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" },
-            { "internalType": "uint256", "name": "xp_gained", "type": "uint256" }
-        ],
-        "name": "gain_experience",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
-        ],
-        "name": "kill_character",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "level", "type": "uint256" }
-        ],
-        "name": "_xp_required_for_level",
-        "outputs": [
-            { "internalType": "uint256", "name": "xp_needed", "type": "uint256" }
-        ],
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
-        ],
-        "name": "ownerOf",
-        "outputs": [
-            { "internalType": "address", "name": "owner", "type": "address" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "totalSupply",
-        "outputs": [
-            { "internalType": "uint256", "name": "supply", "type": "uint256" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
-        ],
-        "name": "tokenURI",
-        "outputs": [
-            { "internalType": "string", "name": "uri", "type": "string" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "uint256", "name": "token_id", "type": "uint256" }
-        ],
-        "name": "burn",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            { "internalType": "address", "name": "owner", "type": "address" }
-        ],
-        "name": "balanceOf",
-        "outputs": [
-            { "internalType": "uint256", "name": "balance", "type": "uint256" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    }
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "kill_character",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "ownerOf",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "token_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "burn",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenOfOwnerByIndex",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
 ]
+
+
 
 
 
@@ -158,7 +229,7 @@ def get_contract():
     contract: NamedContract = network.manifest_named_contract(
         contract_name="Character",
         abi=ABI,
-        address="0x1471D40Ba5564d548255CE4C538a2c8Fc7DEa927"
+        address="0x7C4b6ad0828dAE64c1678D624f94FAc3C2912db2"
     )
     print("Contract information:", contract)
     return contract, default_wallet

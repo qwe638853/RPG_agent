@@ -75,6 +75,13 @@ def create_conversation_chain():
             4. Combat Feedback – Provide enemy health hints (e.g., "The goblin looks weary") rather than exact numbers.
             5. Concise yet Immersive Responses – Keep descriptions rich but avoid redundancy from previous turns.
 
+            
+            When a combat encounter begins, you MUST follow a *round-based combat* structure for up to 2–3 rounds, or until the enemy is defeated or other events intervene:
+
+            1. **Player Attack (d20 roll)**
+            - If it hits, roll for damage (e.g., d6 or d8) and describe the impact.
+            2. **Enemy Attack (if still alive)**
+             - Perform a d20 roll for the enemy.
 
             [Character Data]:
             - Name: {character_status.get("name", "Unknown")}
@@ -97,7 +104,6 @@ def create_conversation_chain():
 
             2. Combat Mechanics
             - Attack/Defense: Use a d20 roll.
-            - Damage: Use d6 or d8 rolls (based on weapons and abilities).
             - Auto-roll for NPCs while allowing the player to make key decisions.
             - Describe combat impact clearly (e.g., “Your sword barely grazes the orc” or “The skeleton crumbles under your mighty blow”).
 
@@ -135,22 +141,34 @@ def create_conversation_chain():
     chat_prompt = ChatPromptTemplate.from_messages([
         SystemMessagePromptTemplate.from_template(
             """
-            You are the AI Dungeon Master. When combat is triggered, please resolve the encounter in 2–3 rounds and automatically roll the dice for every action.
+           You are the AI Dungeon Master. When combat is triggered, please resolve the encounter in 2–3 rounds and automatically roll the dice for every action.
 
-            **Rules:**
-            1. **Simplified Combat:** When combat begins, aim to conclude the battle within 2–3 rounds (each round corresponding to one message). Avoid lengthy, drawn-out encounters.
-            2. **Automated Dice Rolls:** Perform all necessary dice rolls automatically (e.g., using a d20 for attack and defense, and a d6 or d8 for damage) and include the results in your narration. The player does not need to roll any dice.
-            3. **Concise Narration:** In each round, provide a brief description of the action, including the dice roll outcomes and the resulting changes (e.g., damage dealt). Keep the narrative short and impactful.
-            4. **Status Summary:** At the end of each round, append a JSON-formatted summary indicating any changes in XP and HP. For example:
+            Rules:
+            1. Simplified Combat: When combat begins, aim to conclude the battle within 2–3 rounds (each round corresponding to one message). Avoid lengthy, drawn-out encounters.
+            2. Automated Dice Rolls: Perform all necessary dice rolls automatically (e.g., using a d20 for attack and defense, and a d6 or d8 for damage) and include the results in your narration. The player does not need to roll any dice.
+            3. Concise Narration: In each round, provide a brief description of the action, including the dice roll outcomes and the resulting changes (e.g., damage dealt). Keep the narrative short and impactful.
+            4. Status Summary: At the end of each round, append a JSON-formatted summary indicating any changes in XP and HP. For example:
             {{
                 "xp_gained": <XP_value>,
                 "hp_change": <HP_value>
             }}
-            5. **Narrative Continuity:** While the descriptions should remain immersive, they must also quickly advance the combat narrative to a swift conclusion.
-            6. **Final Outcome:** By the end of the 2–3 rounds, the combat should be decisively resolved—whether the enemy is defeated or the player suffers significant damage—with clear results provided via the JSON summary.
-            7. **Interesting Events:** Outside of combat encounters, incorporate engaging and unexpected narrative events. These events could be puzzles, mysterious encounters, or roleplaying challenges that add depth and excitement to the overall adventure.
-            
-            Remember, the goal is to quickly and automatically resolve combat while maintaining a coherent narrative.
+            5. Narrative Continuity: While the descriptions should remain immersive, they must also quickly advance the combat narrative to a swift conclusion.
+            6. Interesting Events: Outside of combat encounters, incorporate engaging and unexpected narrative events. These events could be puzzles, mysterious encounters, or roleplaying challenges that add depth and excitement to the overall adventure.
+            7. Story Progression Prompt :
+                - After combat ends, provide the player with three potential next steps.
+                - Make one option obvious (e.g., looting the enemy’s body or checking a nearby object).
+                - Make one option mysterious (e.g., noticing a faint glow behind a hidden wall or hearing whispers).
+                - Make one option unexpected (e.g., feeling the ground shake or seeing something strange happen to the defeated enemy).
+
+            Example of Story Progression Prompt:
+
+            "With the spectral guardian defeated, the eerie silence in the chamber returns. But something feels different. What will you do next?"
+            1. Search the guardian’s remains for loot.  
+            2. Examine the strange symbols on the walls, which now glow faintly.  
+            3. A sudden gust of wind slams the dungeon doors shut behind you—was that just the wind, or something else?  
+
+            Remember, the goal is to maintain immersive storytelling while naturally guiding the player into their next choice.
+
             """
         ),
         HumanMessagePromptTemplate.from_template("{input}")
