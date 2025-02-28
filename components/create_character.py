@@ -12,12 +12,10 @@ client = OpenAI(
 )
 
 
+# Generate new character for user
 def generate_character() -> dict:
-    """
-    讓玩家輸入角色描述，並隨機生成角色能力值
-    """
-    name = input("請輸入角色名字： ")
-    description = input("請輸入你的角色背景描述： ")
+    name = input("Please enter the character's name: ")
+    description = input("Please enter your character's background description: ")
     """
     response = client.images.generate(
         model="dall-e-2",

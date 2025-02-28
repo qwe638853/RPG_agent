@@ -9,6 +9,7 @@ load_dotenv(root_dir / ".env")
 
 PINATA_JWT = os.getenv("PINATA_JWT_TOKEN")
 
+# When create new character
 def upload_ipfs(character: dict):
     url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
     character_metadata = {
@@ -37,8 +38,12 @@ def upload_ipfs(character: dict):
         "Content-Type": "application/json"
     }
     response = requests.request("POST", url, json=payload, headers=headers)
-    print(response)
-    
+    if response.status_code == 200:
+        print("Successfully carate character metadata on Pinata!")
+    else:
+        print("Failed to create character metadata. Status code:", response.status_code)
+        print("Response:", response.text)
+        
     Cid = response.json().get("IpfsHash")
     return Cid
 
@@ -49,30 +54,36 @@ def get_ipfs_json(CID: str):
         return json_data
     except Exception as e:
         print(f"connection ipfs failed: {e}")
-        
-def update_ipfs_metadata(cid: str, keyvalues: dict = None):
-    """
-    使用 PUT 請求更新 Pinata 上已經存在的 IPFS 資源（metadata）。
-    - cid: Pinata 回傳的 IPFS Hash (IpfsPinHash)
-    - name: 更新後的名稱 (string)
-    - keyvalues: 你想要更新或新增的自定義鍵值對 (dict)
-    文件參考: https://docs.pinata.cloud/pinning-services/pinata-api#operation/UpdateMetadata
-    """
-    url = "https://api.pinata.cloud/pinning/hashMetadata"
-    
-    # 根據 Pinata 文件，至少要傳 ipfsPinHash
-    payload = {"ipfsPinHash": cid}
 
-    # 如果有指定 keyvalues，就放進 payload
-    if keyvalues is not None:
-        payload["keyvalues"] = keyvalues
+def delete_ipfs(cid: str):
+    print("cid:",cid)
+    url = f"https://api.pinata.cloud/pinning/unpin/{cid}"
+    headers = {
+        "Authorization": f"Bearer {PINATA_JWT}"
+    }
+    response = requests.delete(url, headers=headers)
     
+    if response.status_code == 200:
+        print("Successfully unpinned IPFS file!")
+    else:
+        print("Failed to unpin IPFS file. Status code:", response.status_code)
+        print("Response:", response.text)
+
+# When update character
+def update_ipfs_metadata(keyvalues: dict):
+    
+    url = "https://api.pinata.cloud/pinning/pinJSONToIPFS"
+    payload = {
+        "pinataOptions": {"cidVersion": 1},
+        "pinataMetadata": {"name": "pinnie.json"},
+        "pinataContent": keyvalues
+    }
     headers = {
         "Authorization": f"Bearer {PINATA_JWT}",
         "Content-Type": "application/json"
     }
-    
-    response = requests.put(url, json=payload, headers=headers)
+    response = requests.request("POST", url, json=payload, headers=headers)
+
     
     if response.status_code == 200:
         print("Successfully updated metadata on Pinata!")
@@ -80,8 +91,8 @@ def update_ipfs_metadata(cid: str, keyvalues: dict = None):
         print("Failed to update metadata. Status code:", response.status_code)
         print("Response:", response.text)
     
-    # 回傳 API 回應的 JSON
-    return response.json()
+    Cid = response.json().get("IpfsHash")
+    return Cid
 
     
     

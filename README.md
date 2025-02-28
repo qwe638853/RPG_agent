@@ -43,7 +43,7 @@ Set up `.env` file and fill in the values based on the provided `example.env` fi
 ## Running test
 
 ```
-mox run test --network anvil 
+mox test --network anvil 
 ```
 
 ## Deploying the Token Deployer Contract
@@ -56,6 +56,13 @@ mox run deploy --network anvil
 mox run game --network anvil
 ```
 
+## How to play 
+
+### Create your character 
+When you create your character, you'll be prompted to enter your character's name and provide a brief background description. The AI will generate an image based on your description, bringing your unique character to life as an NFT.
+### Start your travel 
+Once your character is created, you can begin your adventure. As you travel, you'll have the freedom to choose your actions and shape your story. And if you're ever unsure of what to do next, the RPG Agent will guide you by suggesting narrative options to keep the adventure moving forward.
+
 ## Future Prospects & Roadmap
 
 This version serves as a conceptual demo, showcasing the core mechanics and possibilities of RPG Agent. There is significant room for future advancements and enhancements, including:
@@ -63,4 +70,8 @@ This version serves as a conceptual demo, showcasing the core mechanics and poss
 
 - Web-Based Interface – Expand from a CLI-based experience to a fully interactive web-based UI, making it more user-friendly.
 
-_For documentation, please run `mox --help` or visit [the Moccasin documentation](https://cyfrin.github.io/moccasin)_
+- In-Game Economy – Detail plans for an internal economy where players can earn, trade, or spend tokens, possibly integrating with DeFi protocols.
+
+- Achievements & Leaderboards – Outline a system for tracking player milestones and showcasing top adventurers.
+
+

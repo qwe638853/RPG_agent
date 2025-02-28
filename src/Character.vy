@@ -1,10 +1,6 @@
 # pragma version 0.4.0
 """
-@title D&D 角色 NFT（ERC-721）
-@notice 這是一個以龍與地下城系統為靈感的 NFT 智能合約，
-        支援 ERC-721 標準、EIP-4494 和 EIP-4906，
-        並只在鍊上保留角色進度（等級、經驗與血量），
-        角色的詳細能力值（力量、敏捷等）放在 IPFS metadata 中。
+@title Character NFT (ERC-721)
 """
 
 from snekmate.tokens import erc721
@@ -22,25 +18,25 @@ exports:(
     erc721.balanceOf
 )
 
-# 定義角色狀態結構，包含等級、經驗值、血量
+# Define the CharacterStatus struct, including level and experience.
 struct CharacterStatus:
-    level: uint256         # 角色等級
-    experience: uint256    # 經驗值
+    level: uint256         # Character level
+    experience: uint256    # Experience points
 
-# 映射：token_id => CharacterStatus
+# Mapping: token_id => CharacterStatus
 character_status: public(HashMap[uint256, CharacterStatus])
 
-# NFT 計數器
+# NFT counter
 counter: public(uint256)
 agent_admin: address
 
 @deploy
 def __init__(base_uri: String[80]):
     """
-    初始化 NFT 合約，並設置基礎 Metadata URI
+    Initialize the NFT contract and set the base Metadata URI.
     """
     ownable.__init__()
-    erc721.__init__("D&D Characters", "DND", base_uri, "D&D EIP712", "1.0")
+    erc721.__init__("Characters", "RPG", base_uri, "RPG Adventure", "1.0")
     self.counter = 0
     self.agent_admin = msg.sender
 
@@ -49,28 +45,25 @@ def create_character(
     owner: address,
     metadata_uri: String[128],
 ):
-    """
-    鑄造新的角色 NFT。
-    角色能力值改為放在 IPFS Metadata 中（由 metadata_uri 指向）。
-    
-    參數：
-    - owner: NFT 擁有者地址
-    - metadata_uri: 該 NFT 對應的 IPFS（或其他）Metadata URI
-
-    """
     token_id: uint256 = self.counter
 
-    # 鑄造 NFT 並設定 Metadata
+    # Mint the NFT and set the Metadata URI.
     erc721._safe_mint(owner, token_id, b"")
     erc721._set_token_uri(token_id, metadata_uri)
 
-    # 設定角色初始狀態：等級 1，經驗 0，血量 = initial_hp
+    # Set the initial character status: level 1, experience 0.
     self.character_status[token_id] = CharacterStatus(
         level=1,
         experience=0,
     )
-
     self.counter += 1
+
+
+@external
+def change_character(token_id:uint256 ,metadata_uri: String[128]):
+    assert msg.sender == self.agent_admin, "Only admin can change character"
+    erc721._set_token_uri(token_id, metadata_uri)
+
 
 @external
 def update_status(
@@ -79,8 +72,8 @@ def update_status(
     new_experience: uint256,
 ):
     """
-    更新指定 NFT 的角色狀態（例如升級後更新等級、經驗值與血量）。
-    只有 NFT 擁有者才能更新其狀態。
+    Update the status of the specified NFT (e.g., updating level and experience after leveling up).
+    Only admin can update the status.
     """
     assert msg.sender == self.agent_admin, "Only admin can update status"
     status: CharacterStatus = self.character_status[token_id]
@@ -93,45 +86,44 @@ def update_status(
 @pure
 def _xp_required_for_level(level: uint256) -> uint256:
     """
-    計算升級到指定等級所需的 XP。
-    e.g.  level=2 => 20 XP, level=3 => 40 XP...
-    可根據需求自行調整。
+    Calculate the XP required to level up to the specified level.
+    e.g., level=2 => 20 XP, level=3 => 40 XP...
+    Adjust this as needed.
     """
     if level == 1:
-        return 0  # level 1 不需要 XP
+        return 0  # Level 1 requires no XP.
     return 10 * (2 ** (level - 1))
 
 @external
 def gain_experience(token_id: uint256, xp_gained: uint256):
     """
-    角色獲得 XP：疊加後若足夠升級，則自動升級。
-    只有 NFT 擁有者能呼叫。
+    Allow the character to gain XP: accumulate XP and, if sufficient, automatically level up.
+    Only admin can call this.
     """
     assert msg.sender == self.agent_admin, "Only admin can modify XP"
     
     status: CharacterStatus = self.character_status[token_id]
     status.experience += xp_gained
 
-    
     next_level_threshold: uint256 = self._xp_required_for_level(status.level + 1)
     if status.experience >= next_level_threshold and next_level_threshold > 0:
         status.level += 1
         status.experience -= next_level_threshold
-    
+
     self.character_status[token_id] = status
 
 @external
 @view
 def query_character(token_id: uint256) -> CharacterStatus:
     """
-    查詢指定角色狀態（等級、經驗、血量）。
+    Query the status of the specified character (level, experience).
     """
     return self.character_status[token_id]
 
 @external
 def kill_character(token_id: uint256):
     """
-    銷毀 NFT，並刪除該 NFT 對應的角色狀態。
+    Burn the NFT and delete the associated character status.
     """
     assert msg.sender == self.agent_admin, "Only the owner can burn"
     erc721._burn(token_id)

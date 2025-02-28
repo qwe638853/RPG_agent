@@ -1,5 +1,5 @@
 from components.create_character import generate_character
-from components.contract_interaction import mint_character,query_character,burn_character
+from components.contract_interaction import mint_character,query_characters,burn_character
 from components.create_story import start_conversation
 from components.ipfs_connection import upload_ipfs
 
@@ -13,18 +13,18 @@ def character_select_info(character:dict):
     print("Level:", character.get("attributes")[0].get("value"))
     
 def main():
-    print("\n🔥 Welcome to Soul game D&D 🔥")
+    print("\n🔥 Welcome to RPG agent game 🔥")
     while True:
         print("\n=== Main Menu ===")
         print("1. Create character")
         print("2. Start game")
         print("3. Query character")
-        print("3. Burn")
+        print("4. Burn")
         print("0. Exit")
         
         choice = input("Select an option: ").strip()
         
-        json_datas,token_URIs,token_IDs = query_character()
+        json_datas,token_URIs,token_IDs = query_characters()
         if choice == "1":
             # Start a new game: generate a character, upload metadata, mint NFT, then start conversation.
             try:
@@ -102,6 +102,6 @@ def main():
 
    
     
-# Moccasin 執行入口
+# Moccasin entry point
 def moccasin_main():
     return main()
