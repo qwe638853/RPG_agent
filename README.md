@@ -12,32 +12,32 @@ RPG Agent is an innovative interactive role-playing game (RPG) inspired by Dunge
 
 ## Setting up environment
 
-1.Install uv
+1. Install uv
 ```
 pip install uv
 ```
-2.Set up a virtual environment
+2. Set up a virtual environment
 
 ```
 uv venv
 ```
 
-3.active the virtual environment
+3. active the virtual environment
 ```bash
 source .venv/bin/activate
 ```
 
-4.install the Python dependencies
+4. install the Python dependencies
 
 ```
 uv pip install requirements.txt
 ```
-5.install the moccasin dependencies
+5. install the moccasin dependencies
 ```
 uv run moccasin install
 ```
 
-6.set up `.env`
+6. set up `.env`
 Set up `.env` file and fill in the values based on the provided `example.env` file
 
 ## Running test
