@@ -143,3 +143,60 @@ def test_kill_character_revert_not_admin(character_contract, default_account):
 
     with boa.reverts("Only the owner can burn"):
         character_contract.kill_character(token_id, sender=attacker)
+        
+def test_change_character(character_contract, default_account):
+    """
+    Test that an admin (default_account) can successfully change the token's metadata URI.
+    """
+    # Mint a new character NFT
+    original_metadata_uri = "https://game.com/meta/character_change.json"
+    character_contract.create_character(
+        default_account.address, 
+        original_metadata_uri, 
+        sender=default_account.address
+    )
+    token_id = 0
+
+    # The new metadata URI we want to set
+    new_metadata_uri = "bafkreichangemetadata"
+
+    # Change the token's metadata URI
+    character_contract.change_character(
+        token_id, 
+        new_metadata_uri, 
+        sender=default_account.address
+    )
+
+    # Assuming the contract prepends "https://ipfs.io/ipfs/" to the CID
+    base_uri = "https://ipfs.io/ipfs/"
+    # Verify the tokenURI has been updated
+    assert character_contract.tokenURI(token_id) == base_uri + new_metadata_uri
+
+
+def test_change_character_revert_not_admin(character_contract, default_account):
+    """
+    Test that calling change_character from a non-admin account reverts with "Only admin can change character".
+    """
+    # Mint a new character NFT
+    original_metadata_uri = "https://game.com/meta/character_change2.json"
+    character_contract.create_character(
+        default_account.address, 
+        original_metadata_uri, 
+        sender=default_account.address
+    )
+    token_id = 0
+
+    # The new metadata URI
+    new_metadata_uri = "bafkreichangemetadata2"
+
+    # Generate a random attacker address
+    attacker = boa.env.generate_address()
+
+    # Attempting to change the URI as a non-admin should revert
+    with boa.reverts("Only admin can change character"):
+        character_contract.change_character(
+            token_id, 
+            new_metadata_uri, 
+            sender=attacker
+        )
+
