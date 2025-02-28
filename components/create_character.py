@@ -16,7 +16,6 @@ client = OpenAI(
 def generate_character() -> dict:
     name = input("Please enter the character's name: ")
     description = input("Please enter your character's background description: ")
-    """
     response = client.images.generate(
         model="dall-e-2",
         prompt=f"A D&D fantasy character: {description}",
@@ -24,9 +23,7 @@ def generate_character() -> dict:
         size="512x512"
     )
     image_url = response.data[0].url
-    """
-    
-    image_url = ""
+
     attributes = {
         "strength": random.randint(5, 20),
         "dexterity": random.randint(5, 20),
