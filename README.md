@@ -37,7 +37,7 @@ uv pip install requirements.txt
 uv run moccasin install
 ```
 
-6. set up `.env`
+6. set up `.env`<br>
 Set up `.env` file and fill in the values based on the provided `example.env` file
 
 ## Running test
