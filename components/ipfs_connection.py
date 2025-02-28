@@ -56,7 +56,6 @@ def get_ipfs_json(CID: str):
         print(f"connection ipfs failed: {e}")
 
 def delete_ipfs(cid: str):
-    print("cid:",cid)
     url = f"https://api.pinata.cloud/pinning/unpin/{cid}"
     headers = {
         "Authorization": f"Bearer {PINATA_JWT}"

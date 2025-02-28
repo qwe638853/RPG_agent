@@ -236,7 +236,6 @@ def get_contract():
         abi=ABI,
         address="0x7C4b6ad0828dAE64c1678D624f94FAc3C2912db2"
     )
-    print("Contract information:", contract, "\n")
     return contract, default_wallet
 
 # Query all character of address on chain 

@@ -78,7 +78,7 @@ def analyze_and_process_response(response):
             
 
     cleaned_response = re.sub(r'\{.*?\}$', '', response, flags=re.DOTALL).strip()
-    print(xp_gained,hp_change)
+
     try:
         if hp_change!=0 or xp_gained!=0:    
             if xp_gained!=0: 
@@ -184,7 +184,7 @@ def start_conversation(character:dict,tokenURI:str,token_id:int):
     character_status = character
     character_tokenURI = tokenURI
     character_tokenId = token_id
-    print(character_status)
+
     conversation = create_conversation_chain()
     session_id = "default_session"
     print("\n🔥 You have arrived at the mysterious dungeon entrance 🔥")
