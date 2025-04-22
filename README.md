@@ -1,5 +1,6 @@
-# [Vyper/Polygon AI Agent Workshop 3rd prize](https://dorahacks.io/hackathon/vyper-polygon-agent-workshop/winner)🥉
-# RPG_agent
+
+# RPG_agent—[Vyper/Polygon AI Agent Workshop 3rd prize](https://dorahacks.io/hackathon/vyper-polygon-agent-workshop/winner)🥉
+
 
 RPG Agent is an innovative interactive role-playing game (RPG) inspired by Dungeons & Dragons, incorporating NFT-based characters and on-chain progression to create a truly immersive experience. Players can develop their characters, embark on procedurally generated adventures, and engage in dynamic storytelling powered by AI.
 
